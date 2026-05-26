@@ -2,7 +2,7 @@
   let { data } = $props();
 
   import Head from "$lib/components/Head.svelte";
-  import { emulators, flashEmulators } from "$lib/emulators";
+  import { flashEmulators } from "$lib/emulators";
   import { storage } from "$lib/storage.svelte.js";
   import { Maximize, RotateCw, Upload, X } from "@lucide/svelte";
 
@@ -10,15 +10,11 @@
   let uploadButton = $state();
   let playerHidden = $state(true);
 
-  let emuData = emulators
-    .concat(flashEmulators)
-    .filter((emu) => emu.id === data.emulator)[0];
-
   const aspectRatio = $derived(
     storage.settings.aspect ? storage.settings.aspect : "h-full w-full",
   );
 
-  function uploadROM(e) {
+  function uploadSWF(e) {
     playerHidden = false;
     frame.contentWindow.postMessage({
       type: "run",
@@ -31,9 +27,11 @@
     uploadButton.value = "";
     playerHidden = true;
   }
+
+  let Icon = flashEmulators[0].icon;
 </script>
 
-<Head title={emuData.title} />
+<Head title={flashEmulators[0].title} />
 
 <div class="flex flex-col items-center justify-center px-4 my-16">
   <div
@@ -41,13 +39,13 @@
   >
     <div class="flex flex-col gap-4">
       <div class="flex gap-4 items-center">
-        <emuData.icon class="w-10 h-10 text-text" />
+        <Icon class="w-10 h-10 text-text" />
         <div>
-          <h2 class="text-2xl font-bold">{emuData.title}</h2>
+          <h2 class="text-2xl font-bold">{flashEmulators[0].title}</h2>
           <p class="text-text-placeholder">
             Emulation powered by <a
               class="hover:underline"
-              href="https://emulatorjs.org/">EmulatorJS</a
+              href="https://ruffle.rs/">Ruffle</a
             >
           </p>
         </div>
@@ -61,18 +59,16 @@
           <Upload class="text-text-inverse" />
         </div>
         <div class="flex flex-col items-center gap-2">
-          <h2 class="text-xl">
-            Select {emuData.title} ROM
-          </h2>
+          <h2 class="text-xl">Select SWF</h2>
           <p class="text-sm text-text-placeholder">
             Click or drag and drop a file here
           </p>
         </div>
         <input
           bind:this={uploadButton}
-          onchange={uploadROM}
+          onchange={uploadSWF}
           type="file"
-          accept={emuData.accept}
+          accept={flashEmulators[0].accept}
           class="hidden"
         />
       </label>
@@ -123,7 +119,7 @@
       bind:this={frame}
       title="Emulation Player"
       class={"bg-background select-none max-h-full max-w-full " + aspectRatio}
-      src="/launch-emu"
+      src="/launch-emu/ruffle"
       allow="display-capture; autoplay; gamepad"
       sandbox="allow-forms allow-scripts allow-same-origin allow-modals allow-pointer-lock allow-downloads"
       style="isolation: isolate; transform-style: flat;"
