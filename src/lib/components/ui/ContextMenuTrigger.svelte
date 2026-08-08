@@ -2,10 +2,9 @@
   import { getContext } from "svelte";
 
   let { children, ...restProps } = $props();
-
-  const ctx = getContext("AlertDialog");
+  const ctx = getContext("ContextMenu");
 </script>
 
-<div class="contents" onclick={() => ctx.close()} {...restProps}>
+<div class="contents" oncontextmenu={ctx.open} {...restProps}>
   {@render children?.()}
 </div>
