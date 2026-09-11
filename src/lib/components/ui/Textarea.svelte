@@ -4,35 +4,29 @@
 
   let {
     class: className,
-    size,
     width,
-    value = $bindable(""),
     disabled,
+    value = $bindable(""),
     ...restProps
   } = $props();
 
-  const input = tv({
-    base: "bg-input/30 text-sm transition-colors disabled:opacity-50 border border-input outline-none rounded-lg w-full placeholder:text-muted px-2.5",
+  const textarea = tv({
+    base: "bg-input/30 text-sm transition-colors disabled:opacity-50 border border-input outline-none rounded-lg w-full placeholder:text-muted py-2 px-2.5 shrink-0 min-h-16 field-sizing-content resize-none",
     variants: {
-      size: {
-        default: "h-9",
-        sm: "h-8",
-      },
       width: {
         default: "w-full",
         fixed: "w-96",
       },
     },
     defaultVariants: {
-      size: "default",
       width: "default",
     },
   });
 </script>
 
-<input
+<textarea
   bind:value
-  class={twMerge(input({ size, width }), className)}
+  spellcheck="false"
+  class={twMerge(textarea({ width }), className)}
   {disabled}
-  {...restProps}
-/>
+  {...restProps}></textarea>
